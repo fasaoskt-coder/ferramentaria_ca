@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Ferramentaria Elétrica CA — Vale</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+<style>
+  :root { --vale-green:#1E6E43; --vale-teal:#3BA99C; --vale-dark:#0f1724; --vale-bg:#F7F9F9; --muted:#64748b; --card-shadow: 0 8px 24px rgba(15,23,36,0.06); }
+  html,body{height:100%;}
+  body { background: var(--vale-bg); color:var(--vale-dark); font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+  .vale-header { background: linear-gradient(90deg, var(--vale-green), var(--vale-teal)); color:#fff; padding:18px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
+  .vale-header .brand { display:flex; align-items:center; gap:1rem; }
+  .vale-header img.logo { height:40px; width:auto; object-fit:contain; border-radius:6px; background:rgba(255,255,255,0.06); padding:4px; }
+  #brandTitle { font-weight:700; font-size:1.15rem; letter-spacing:0.2px; }
+  .site-tag { opacity:0.95; font-size:0.9rem; }
+  .app-bar { background:#fff; border-bottom:1px solid #e6eef0; position:sticky; top:0; z-index:40; }
+  .app-title { color: var(--vale-dark); font-weight:600; }
+  .card { box-shadow: var(--card-shadow); border:0; border-radius:12px; background:#fff; }
+  .tool-photo { width:72px; height:72px; object-fit:cover; border-radius:10px; }
+  .status-badge { font-size:.75rem; }
+  .holder-highlight { border: 2px solid rgba(59,169,156,0.15); box-shadow: 0 6px 18px rgba(59,169,156,0.06); }
+  .tool-card .card-body { padding:16px; }
+  .tool-meta { min-width:0; }
+  .qr-print { page-break-inside: avoid; display:inline-block; margin:8px; padding:12px; border:1px dashed #cbd5e1; border-radius:8px; text-align:center; background:#fff; }
+  .vale-footer { color:#475569; font-size:.9rem; }
+  .small-muted { color:var(--muted); font-size:0.9rem; }
+  .btn-outline-primary[disabled] { opacity:0.45; pointer-events:none; }
+  @media (max-width:767px){ .container { padding-left:12px; padding-right:12px; } .vale-header img.logo { height:34px; } .tool-photo { width:56px; height:56px; } }
+</style>
+
+</head>
+<body>
+<nav class="vale-header py-2">
+<div class="container d-flex justify-content-between align-items-center">
+<div class="brand">
+<img alt="Vale" class="logo" id="valeLogo" src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Vale_logo.svg"/>
+<strong id="brandTitle">Vale</strong>
+</div>
+<div class="small"><span id="siteTag">Segurança e produtividade em primeiro lugar</span></div>
+</div>
+</nav>
+<nav class="app-bar py-2">
+<div class="container d-flex justify-content-between align-items-center">
+<div class="d-flex align-items-center gap-2">
+<span class="badge" style="background: var(--vale-green);">MVP</span>
+<h1 class="h5 mb-0 app-title">Ferramentaria Elétrica CA</h1>
+</div>
+<div class="d-flex align-items-center gap-2">
+<span class="badge text-bg-light d-none" id="currentUserBadge"></span>
+<button class="btn btn-sm btn-outline-secondary d-none" id="btnLogout">Sair</button>
+</div>
+</div>
+</nav>
+<main class="container py-4">
+<!-- LOGIN / CADASTRO -->
+<section class="row justify-content-center" id="authSection">
+<div class="col-lg-5">
+<div class="card p-4">
+<h5 class="mb-3">Entrar</h5>
+<div class="mb-2">
+<label class="form-label">E-mail</label>
+<input class="form-control" id="loginEmail" placeholder="voce@vale.com" type="email"/>
+</div>
+<div class="mb-3">
+<label class="form-label">Senha</label>
+<input class="form-control" id="loginPassword" placeholder="••••••" type="password"/>
+</div>
+<div class="d-grid gap-2">
+<button class="btn btn-success" id="btnLogin" style="background: var(--vale-green); border-color: var(--vale-green);">Entrar</button>
+<button class="btn btn-outline-secondary" id="btnShowSignup">Criar conta</button>
+</div>
+<!-- Informação do administrador oculta na tela de login. Para reexibir, remova display:none. --><div aria-hidden="true" class="alert alert-info mt-3" style="display:none;">
+<div class="fw-semibold">Acesso do Administrador</div>
+<div>Admin: <code>rafael.souza10@vale.com</code> (senha inicial <code>Vale@2025</code>)</div>
+</div>
+</div>
+</div>
+<div class="col-lg-5 d-none" id="signupCard">
+<div class="card p-4">
+<h5 class="mb-3">Criar conta</h5>
+<div class="mb-2">
+<label class="form-label">Nome</label>
+<input class="form-control" id="suName" placeholder="Seu nome"/>
+</div>
+<div class="mb-2">
+<label class="form-label">E-mail</label>
+<input class="form-control" id="suEmail" placeholder="usuario@vale.com" type="email"/>
+</div>
+<div class="mb-2">
+<label class="form-label">Senha</label>
+<input class="form-control" id="suPassword" type="password"/>
+</div>
+<div class="d-grid mt-3">
+<button class="btn btn-primary" id="btnSignup" style="background: var(--vale-teal); border-color: var(--vale-teal);">Registrar</button>
+</div>
+</div>
+</div>
+</section>
+<!-- APP -->
+<section class="d-none" id="appSection">
+<ul class="nav nav-tabs" id="mainTabs" role="tablist">
+<li class="nav-item" role="presentation"><button class="nav-link active" data-bs-target="#tabFerramentas" data-bs-toggle="tab" role="tab" type="button">Ferramentas</button></li>
+<li class="nav-item" role="presentation"><button class="nav-link" data-bs-target="#tabScanner" data-bs-toggle="tab" role="tab" type="button">Scanner QR</button></li>
+<li class="nav-item" role="presentation"><button class="nav-link" data-bs-target="#tabEmprestimos" data-bs-toggle="tab" role="tab" type="button">Empréstimos</button></li>
+<li class="nav-item" role="presentation"><button class="nav-link" data-bs-target="#tabAdmin" data-bs-toggle="tab" role="tab" type="button">Administração</button></li>
+<li class="nav-item" role="presentation"><button class="nav-link" data-bs-target="#tabLog" data-bs-toggle="tab" role="tab" type="button">Log</button></li>
+</ul>
+<div class="tab-content py-3">
+<!-- FERRAMENTAS -->
+<div class="tab-pane fade show active" id="tabFerramentas" role="tabpanel">
+<div class="d-flex flex-wrap gap-2 mb-3 align-items-end">
+<div class="flex-grow-1">
+<label class="form-label">Buscar</label>
+<input class="form-control" id="searchTools" placeholder="Nome, código ou status"/>
+</div>
+<div>
+<label class="form-label">Status</label>
+<select class="form-select" id="filterStatus">
+<option value="all">Todos</option>
+<option value="available">Disponível</option>
+<option value="loaned">Emprestada</option>
+</select>
+</div>
+<button class="btn btn-success" data-bs-target="#modalTool" data-bs-toggle="modal" id="btnNewTool" style="background: var(--vale-green); border-color: var(--vale-green);">+ Nova ferramenta</button>
+<button class="btn btn-outline-secondary" id="btnExport">Exportar JSON</button>
+<label class="btn btn-outline-secondary mb-0">Importar JSON <input accept="application/json" class="d-none" id="importJson" type="file"/></label>
+</div>
+<div class="row g-3" id="toolsList"></div>
+</div>
+<!-- SCANNER -->
+<div class="tab-pane fade" id="tabScanner" role="tabpanel">
+<div class="row g-3">
+<div class="col-lg-6">
+<div class="card p-3">
+<h6 class="mb-2">Ler QR code</h6>
+<div class="border rounded" id="reader" style="min-height:320px;"></div>
+<div class="form-text mt-2">Conceda acesso à câmera. Em desktop, prefira <b>localhost</b> ou <b>https</b>.</div>
+</div>
+</div>
+<div class="col-lg-6">
+<div class="card p-3">
+<h6 class="mb-2">Resultado</h6>
+<div class="text-muted" id="scanResult">Aguardando leitura…</div>
+</div>
+</div>
+</div>
+</div>
+<!-- EMPRÉSTIMOS -->
+<div class="tab-pane fade" id="tabEmprestimos" role="tabpanel">
+<div class="d-flex justify-content-between align-items-center mb-2">
+<h6 class="mb-0">Ativos</h6>
+<div class="form-text">Devolução em até <b>48h</b></div>
+</div>
+<div class="list-group" id="loansList"></div>
+</div>
+<!-- ADMIN -->
+<div class="tab-pane fade" id="tabAdmin" role="tabpanel">
+<div class="row g-3">
+<div class="col-lg-6">
+<div class="card p-3">
+<h6>Configurações de Marca</h6>
+<div class="mb-2"><label class="form-label">URL do logo (SharePoint/Assets)</label><input class="form-control" id="cfgLogo" placeholder="https://.../vale-logo.svg"/>
+  <label class="btn btn-outline-secondary mb-0" id="btnChooseLogo" style="display:inline-flex;align-items:center;gap:.5rem;margin-left:.5rem;cursor:pointer;">Escolher arquivo<input type="file" accept="image/*" id="cfgLogoFile" style="display:none;"></label>
+  <div class="mt-2 d-flex align-items-center gap-2"><img id="cfgLogoPreview" alt="preview" style="height:40px; display:none; border-radius:6px; background:#fff; padding:4px;"/><small class="text-muted" id="cfgLogoInfo">Cole uma URL ou selecione um arquivo (max ~2MB).</small></div></div>
+<div class="row g-2">
+<div class="col-md-6"><label class="form-label">Título da marca</label><input class="form-control" id="cfgBrandTitle" placeholder="Vale"/></div>
+<div class="col-md-6"><label class="form-label">Slogan/Tagline</label><input class="form-control" id="cfgTag" placeholder="Segurança e produtividade em primeiro lugar"/></div>
+</div>
+<div class="row g-2 mt-1">
+<div class="col-md-4"><label class="form-label">Primária</label><input class="form-control form-control-color" id="cfgPrimary" type="color" value="#1E6E43"/></div>
+<div class="col-md-4"><label class="form-label">Secundária</label><input class="form-control form-control-color" id="cfgSecondary" type="color" value="#3BA99C"/></div>
+<div class="col-md-4"><label class="form-label">Fundo</label><input class="form-control form-control-color" id="cfgBg" type="color" value="#F4F6F6"/></div>
+</div>
+<div class="mb-2 mt-2"><label class="form-label">Webhook de e-mail (Power Automate)</label><input class="form-control" id="cfgWebhook" placeholder="https://prod-...logic.azure.com/..."/></div>
+<div class="d-flex gap-2"><button class="btn btn-primary" id="btnSaveSettings" style="background: var(--vale-teal); border-color: var(--vale-teal);">Salvar</button><button class="btn btn-outline-secondary" id="btnResetBrand">Restaurar padrão</button></div>
+</div>
+</div>
+<div class="col-lg-6">
+<div class="card p-3">
+<h6>Usuários (somente admin)</h6>
+<div class="d-flex gap-2 mb-2">
+<button class="btn btn-sm btn-success" id="btnNewUser" style="background: var(--vale-green); border-color: var(--vale-green);">+ Novo usuário</button>
+</div>
+<div class="list-group small" id="usersList"></div>
+</div>
+</div>
+<div class="col-12">
+<div class="card p-3">
+<h6>Imprimir QR Codes</h6>
+<div id="qrArea"></div>
+<div class="d-flex gap-2 mt-2"><button class="btn btn-outline-primary" id="btnRenderQRCodes">Gerar etiquetas</button><button class="btn btn-outline-secondary" onclick="window.print()">Imprimir</button></div>
+</div>
+</div>
+</div>
+</div>
+<!-- LOG -->
+<div class="tab-pane fade" id="tabLog" role="tabpanel"><div class="list-group small" id="logList"></div></div>
+</div>
+</section>
+</main>
+<footer class="vale-footer border-top py-3">
+<div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+<div>© <span id="year"></span> Vale — Uso interno</div>
+<div class="d-flex gap-3"><a href="#" id="linkPoliticas" rel="noopener" target="_blank">Políticas</a><a href="#" id="linkAjuda" rel="noopener" target="_blank">Ajuda</a></div>
+</div>
+</footer>
+<!-- MODAL FERRAMENTA -->
+<div class="modal fade" id="modalTool" tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title" id="toolModalTitle">Nova ferramenta</h5><button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button></div>
+<div class="modal-body">
+<div class="row g-3">
+<div class="col-md-6"><label class="form-label">Nome</label><input class="form-control" id="toolName" placeholder="Ex.: Chave de boca 24mm"/></div>
+<div class="col-md-6"><label class="form-label">Código / QR</label>
+<div class="input-group">
+<input class="form-control" id="toolCode" placeholder="Ex.: FERR-0001"/>
+<button class="btn btn-outline-secondary" id="btnScanFillCode" title="Ler QR para preencher" type="button"><span class="bi bi-qr-code"></span>Ler QR</button>
+</div>
+<div class="form-text">Use o scanner para preencher automaticamente.</div>
+</div>
+<div class="col-md-6"><label class="form-label">Foto</label><input accept="image/*" class="form-control" id="toolPhoto" type="file"/><img class="mt-2 tool-photo d-none" id="toolPreview"/></div>
+<div class="col-md-6"><label class="form-label">Observações</label><input class="form-control" id="toolNotes" placeholder="Marca, estado, etc."/></div>
+</div>
+</div>
+<div class="modal-footer"><button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Cancelar</button><button class="btn btn-success" id="btnSaveTool" style="background: var(--vale-green); border-color: var(--vale-green);" type="button">Salvar</button></div>
+</div></div>
+</div>
+<!-- MODAL NOVO USUÁRIO -->
+<div class="modal fade" id="modalUser" tabindex="-1">
+<div class="modal-dialog"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title">Novo usuário</h5><button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button></div>
+<div class="modal-body">
+<div class="mb-2"><label class="form-label">Nome</label><input class="form-control" id="usrName" placeholder="Nome completo"/></div>
+<div class="mb-2"><label class="form-label">E-mail</label><input class="form-control" id="usrEmail" placeholder="usuario@vale.com" type="email"/></div>
+<div class="mb-2"><label class="form-label">Senha inicial</label><input class="form-control" id="usrPass" type="text" value="Vale@2025"/><div class="form-text">O usuário pode alterar depois (no futuro SSO isso some).</div></div>
+</div>
+<div class="modal-footer"><button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-primary" id="btnSaveUser" style="background: var(--vale-teal); border-color: var(--vale-teal);">Salvar</button></div>
+</div></div>
+</div>
+<!-- MODAL SCAN POR FERRAMENTA -->
+<div class="modal fade" id="modalScanTool" tabindex="-1">
+<div class="modal-dialog modal-md"><div class="modal-content">
+<div class="modal-header"><h5 class="modal-title">Escanear QR da ferramenta</h5><button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button></div>
+<div class="modal-body">
+<div class="small text-muted">Aponte a câmera para o QR da ferramenta <b><span id="scanToolName"></span></b> (<code id="scanToolCode"></code>).</div>
+<div class="border rounded mt-2" id="toolScanReader" style="min-height:280px;"></div>
+<div class="mt-2 small" id="toolScanMsg"></div>
+</div>
+</div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal de confirmação de empréstimo -->
+<div class="modal fade" id="confirmLoanModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar Empréstimo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmLoanText">Deseja realmente emprestar esta ferramenta?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="confirmLoanBtn" style="background: var(--vale-green); border-color: var(--vale-green);">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    const ADMIN_EMAIL = 'rafael.souza10@vale.com';
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    const ls = { get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;}}, set:(k,v)=>localStorage.setItem(k, JSON.stringify(v)) };
+    const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+    const nowIso = () => new Date().toISOString();
+    const fmt = (iso) => new Date(iso).toLocaleString();
+
+    const DB = {
+      users: () => ls.get('fi_users', []), tools: () => ls.get('fi_tools', []), loans: () => ls.get('fi_loans', []), logs: () => ls.get('fi_logs', []), settings: () => ls.get('fi_settings', { webhook:"" }), brand: () => ls.get('fi_brand', { logo:'', title:'Vale', tag:'Segurança e produtividade em primeiro lugar', links:{ politicas:'#', ajuda:'#' }, colors:{ primary:'#1E6E43', secondary:'#3BA99C', bg:'#F4F6F6' } })
+    };
+    function log(event, data={}){ const logs=DB.logs(); logs.unshift({id:uid(), ts:nowIso(), user:session.user?.email||'-', event, data}); ls.set('fi_logs', logs.slice(0,500)); renderLog(); }
+
+    // Session
+    const session = { user:null };
+    const isAdmin = (u) => u && u.email && u.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+    function setSessionUser(user){ session.user = user ? {...user, role: isAdmin(user)?'admin':'user'} : null; if(user){ $('#currentUserBadge').textContent = `${session.user.name} (${session.user.role})`; $('#currentUserBadge').classList.remove('d-none'); $('#btnLogout').classList.remove('d-none'); $('#authSection').classList.add('d-none'); $('#appSection').classList.remove('d-none'); applyAdminGuards(); renderAll(); startScanner(); } else { $('#currentUserBadge').classList.add('d-none'); $('#btnLogout').classList.add('d-none'); $('#authSection').classList.remove('d-none'); $('#appSection').classList.add('d-none'); stopScanner(); } }
+    function applyAdminGuards(){ const admin=isAdmin(session.user); $('#btnNewTool').style.display = admin? 'inline-block' : 'none'; $('#btnNewUser').disabled = !admin; $('#btnSaveTool').disabled = !admin;
+      // 🔒 Oculta abas Administração e Log para não-admins
+      const adminTab = document.querySelector('button[data-bs-target="#tabAdmin"]');
+      const logTab = document.querySelector('button[data-bs-target="#tabLog"]');
+      if (adminTab && logTab) {
+        if (!admin) {
+          adminTab.parentElement.style.display = 'none';
+          logTab.parentElement.style.display = 'none';
+        } else {
+          adminTab.parentElement.style.display = 'block';
+          logTab.parentElement.style.display = 'block';
+        }
+      }
+    }
+
+    // Seed admin
+    (function seed(){ const users=DB.users(); if(!users.find(u=>u.email && u.email.toLowerCase()===ADMIN_EMAIL.toLowerCase())){ users.push({ id:uid(), name:'Administrador', email:ADMIN_EMAIL, password:'Vale@2025', role:'admin', createdAt: nowIso() }); ls.set('fi_users', users); } })();
+
+    // Auth
+    $('#btnShowSignup').addEventListener('click', ()=> $('#signupCard').classList.toggle('d-none'));
+    $('#btnSignup').addEventListener('click', ()=>{ const name=$('#suName').value.trim(); const email=($('#suEmail').value||'').trim().toLowerCase(); const pass=$('#suPassword').value; if(!name||!email||!pass) return alert('Preencha todos os campos'); if(email===ADMIN_EMAIL.toLowerCase()) return alert('A conta do administrador já existe e não pode ser criada aqui.'); const users=DB.users(); if(users.find(u=>u.email && u.email.toLowerCase()===email)) return alert('E-mail já cadastrado'); users.push({ id:uid(), name, email, password:pass, role:'user', createdAt:nowIso() }); ls.set('fi_users', users); log('usuario_cadastrado_publico',{email}); alert('Cadastro realizado. Você já pode entrar.'); $('#signupCard').classList.add('d-none'); });
+    $('#btnLogin').addEventListener('click', ()=>{ const email=($('#loginEmail').value||'').trim().toLowerCase(); const pass=$('#loginPassword').value; const user=DB.users().find(u=>u.email && u.email.toLowerCase()===email && u.password===pass); if(!user) return alert('Credenciais inválidas'); setSessionUser(user); log('login',{email}); });
+    $('#btnLogout').addEventListener('click', ()=> setSessionUser(null));
+
+    // Users (admin)
+    function renderUsers(){ const list=$('#usersList'); if(!list) return; list.innerHTML=''; const users=DB.users().sort((a,b)=> a.email.localeCompare(b.email)); users.forEach(u=>{ const admin=isAdmin(u); const li=document.createElement('div'); li.className='list-group-item'; li.innerHTML = `<div class="d-flex justify-content-between align-items-center"><div><div class="fw-semibold">${u.name||'-'} ${admin?'<span class="badge bg-success ms-2">admin</span>':''}</div><div class="text-muted">${u.email}</div></div><div class="d-flex gap-2"><button class="btn btn-sm btn-outline-secondary" data-action="reset" data-id="${u.id}" ${admin?'disabled':''}>Resetar senha</button><button class="btn btn-sm btn-outline-danger" data-action="del" data-id="${u.id}" ${admin?'disabled':''}>Excluir</button></div></div>`; list.appendChild(li); }); }
+    $('#usersList').addEventListener('click', (e)=>{ const btn=e.target.closest('button'); if(!btn) return; if(!isAdmin(session.user)) return alert('Apenas o administrador pode gerenciar usuários'); const id=btn.getAttribute('data-id'); const users=DB.users(); const u=users.find(x=>x.id===id); if(!u) return; const action=btn.getAttribute('data-action'); if(action==='reset'){ const nova=prompt('Nova senha para '+u.email+':','Vale@2025'); if(!nova) return; u.password=nova; ls.set('fi_users', users); log('usuario_reset_senha',{email:u.email}); alert('Senha redefinida.'); } else if(action==='del'){ if(isAdmin(u)) return alert('Não é possível excluir o administrador principal.'); if(confirm('Excluir usuário '+u.email+'?')){ ls.set('fi_users', users.filter(x=>x.id!==u.id)); log('usuario_excluido',{email:u.email}); renderUsers(); } } });
+    $('#btnNewUser').addEventListener('click', ()=>{ if(!isAdmin(session.user)) return alert('Apenas o administrador pode criar usuários'); const modal=bootstrap.Modal.getOrCreateInstance('#modalUser'); $('#usrName').value=''; $('#usrEmail').value=''; $('#usrPass').value='Vale@2025'; modal.show(); });
+    $('#btnSaveUser').addEventListener('click', ()=>{ if(!isAdmin(session.user)) return alert('Apenas o administrador pode criar usuários'); const name=$('#usrName').value.trim(); const email=($('#usrEmail').value||'').trim().toLowerCase(); const pass=$('#usrPass').value.trim(); if(!name||!email||!pass) return alert('Preencha nome, e-mail e senha'); if(email===ADMIN_EMAIL.toLowerCase()) return alert('O e-mail do administrador já está cadastrado.'); const users=DB.users(); if(users.find(u=>u.email && u.email.toLowerCase()===email)) return alert('E-mail já cadastrado'); users.push({ id:uid(), name, email, password:pass, role:'user', createdAt:nowIso() }); ls.set('fi_users', users); log('usuario_criado_admin',{email}); bootstrap.Modal.getOrCreateInstance('#modalUser').hide(); renderUsers(); });
+
+    // Tools
+    let editToolId=null;
+    function openToolModal(tool){ if(!isAdmin(session.user)) return alert('Apenas o administrador pode adicionar/editar ferramentas'); editToolId = tool? tool.id : null; $('#toolModalTitle').textContent = tool? 'Editar ferramenta' : 'Nova ferramenta'; $('#toolName').value = tool?.name || ''; $('#toolCode').value = tool?.code || ''; $('#toolNotes').value = tool?.notes || ''; const prev=$('#toolPreview'); if(tool?.photo){ prev.src=tool.photo; prev.classList.remove('d-none'); } else { prev.classList.add('d-none'); } }
+    $('#toolPhoto').addEventListener('change', (e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ $('#toolPreview').src=reader.result; $('#toolPreview').classList.remove('d-none'); }; reader.readAsDataURL(file); });
+
+    // Fill code by scanning (from Tool modal)
+    let fillCodeScanner=null;
+    $('#btnScanFillCode').addEventListener('click', ()=>{
+      if(!isAdmin(session.user)) return alert('Apenas o administrador pode usar esta função');
+      try{
+        if(fillCodeScanner){ fillCodeScanner.stop().catch(()=>{}); fillCodeScanner.clear().catch(()=>{}); fillCodeScanner=null; }
+        const tempId='toolScanTemp';
+        const tempBox=document.createElement('div'); tempBox.id=tempId; tempBox.className='border rounded mt-2'; tempBox.style.minHeight='220px';
+        $('#toolCode').closest('.col-md-6').appendChild(tempBox);
+        fillCodeScanner=new Html5Qrcode(tempId);
+        fillCodeScanner.start({ facingMode:'environment' }, { fps:10, qrbox:200 }, (text)=>{ $('#toolCode').value=text; }, (err)=>{});
+      }catch(e){ alert('Não foi possível iniciar a câmera. Use o Scanner QR na aba principal.'); }
+    });
+
+    $('#btnSaveTool').addEventListener('click', ()=>{ if(!isAdmin(session.user)) return alert('Apenas o administrador pode adicionar/editar ferramentas'); const name=$('#toolName').value.trim(); const code=$('#toolCode').value.trim(); const notes=$('#toolNotes').value.trim(); const photo=$('#toolPreview').getAttribute('src')||''; if(!name||!code) return alert('Informe nome e código'); const tools=DB.tools(); if(editToolId){ const t=tools.find(x=>x.id===editToolId); t.name=name; t.code=code; t.notes=notes; if(photo) t.photo=photo; log('ferramenta_editada',{id:t.id,code}); } else { if(tools.some(t=>t.code===code)) return alert('Código já existente'); tools.push({ id:uid(), name, code, notes, photo, status:'available', holder:null, createdAt: nowIso(), updatedAt: nowIso() }); log('ferramenta_criada',{code}); } ls.set('fi_tools', tools); $('#toolName').value=''; $('#toolCode').value=''; $('#toolNotes').value=''; $('#toolPreview').classList.add('d-none'); bootstrap.Modal.getOrCreateInstance('#modalTool').hide(); if(fillCodeScanner){ fillCodeScanner.stop().catch(()=>{}); fillCodeScanner.clear().catch(()=>{}); fillCodeScanner=null; } renderTools(); renderQR(); });
+
+
+function renderTools(){ const term=$('#searchTools').value?.trim().toLowerCase()||''; const fStatus=$('#filterStatus').value; const tools=DB.tools().filter(t=>{ const hay=`${t.name} ${t.code} ${t.status}`.toLowerCase(); const okTerm=!term||hay.includes(term); const okStatus=fStatus==='all'||t.status===fStatus; return okTerm && okStatus; }); const container=$('#toolsList'); container.innerHTML=''; if(!tools.length){ container.innerHTML='<div class="text-muted">Nenhuma ferramenta.</div>'; return; } tools.forEach(t=>{ const col=document.createElement('div'); col.className='col-md-6 col-lg-4'; const admin=isAdmin(session.user); const isHolder = session.user && t.holder === session.user.id; const holderUser = t.holder ? DB.users().find(u=>u.id===t.holder) : null; const holderName = holderUser ? holderUser.name : null; let returnBtnText = t.status==='available' ? 'Emprestar' : 'Devolver'; let returnBtnDisabled = t.status==='loaned' && !isHolder; let returnBtnStyle = t.status==='available' ? 'border-color: var(--vale-green); color: var(--vale-green);' : (isHolder ? '' : 'opacity:0.6;'); const holderClass = isHolder ? 'border-3 border-primary' : ''; col.innerHTML=`      <div class="card p-3 h-100" style="border-top:4px solid var(--vale-teal);">\n        <div class="d-flex align-items-center gap-3">\n          <img src="${t.photo||'https://via.placeholder.com/64?text=%F0%9F%9B%A0%EF%B8%8F'}" class="tool-photo" alt="foto" />\n          <div class="flex-grow-1">\n            <div class="d-flex justify-content-between align-items-start">\n              <div>\n                <div class="fw-semibold">${t.name}</div>\n                <div class="text-muted small">${t.code}</div>\n              </div>\n              <span class="badge ${t.status==='available' ? 'bg-success' : 'bg-warning text-dark'} status-badge">${t.status==='available'?'Disponível':'Emprestada'}</span>\n            </div>\n            <div class="small text-muted">${t.notes||''}</div>\n            ${t.status==='loaned' && holderName ? `<div class="small mt-2">Emprestado para: <strong>${holderName}</strong>${isHolder? ' <span class="badge bg-warning text-dark ms-2">Você</span>' : ''}</div>` : ''}\n          </div>\n        </div>\n        <div class="d-flex flex-wrap gap-2 mt-3">\n          <button class="btn btn-sm btn-outline-primary" data-action="loan" data-id="${t.id}" style="${returnBtnStyle}" ${returnBtnDisabled? 'disabled' : ''}>${returnBtnText}</button>\n          <button class="btn btn-sm btn-outline-success" data-action="scan" data-id="${t.id}">Escanear QR</button>\n          <button class="btn btn-sm btn-outline-secondary" data-action="edit" data-id="${t.id}" data-bs-toggle="modal" data-bs-target="#modalTool" ${!admin?'disabled':''}>Editar</button>\n          <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${t.id}" ${!admin?'disabled':''}>Excluir</button>\n        </div>\n      </div>`; container.appendChild(col); }); }
+    $('#toolsList').addEventListener('click', (e)=>{ const btn=e.target.closest('button'); if(!btn) return; const id=btn.getAttribute('data-id'); const action=btn.getAttribute('data-action'); const tools=DB.tools(); const t=tools.find(x=>x.id===id); if(!t) return; if(action==='edit') return openToolModal(t); if(action==='delete'){ if(!isAdmin(session.user)) return alert('Apenas o administrador pode excluir ferramentas'); if(confirm('Excluir esta ferramenta?')){ const loans=DB.loans(); if(loans.some(l=>l.toolId===id && l.returnedAt==null)) return alert('Não é possível excluir: ferramenta emprestada.'); ls.set('fi_tools', tools.filter(x=>x.id!==id)); log('ferramenta_excluida',{code:t.code}); renderTools(); renderQR(); } } if(action==='loan'){ if(t.status==='available') doLoan(t); else { if(!session.user || t.holder !== session.user.id){ return alert('Apenas o usuário que realizou o empréstimo pode devolver esta ferramenta.'); } showReturnModal(t, ({condition,note}={})=>{ doReturn(t); }); } } if(action==='scan'){ openScanToolModal(t); } });
+
+    $('#searchTools').addEventListener('input', renderTools); $('#filterStatus').addEventListener('change', renderTools);
+
+    // Loans
+    function doLoan(tool){ if(!session.user) return alert('Faça login.'); const tools=DB.tools(); const t=tools.find(x=>x.id===tool.id); if(t.status!=='available') return alert('Já emprestada.'); const loans=DB.loans(); const dueAt=new Date(Date.now()+48*60*60*1000).toISOString(); loans.unshift({ id:uid(), toolId:t.id, toolCode:t.code, toolName:t.name, userId:session.user.id, userEmail:session.user.email, userName:session.user.name, loanedAt:nowIso(), dueAt, returnedAt:null }); ls.set('fi_loans', loans); t.status='loaned'; t.holder=session.user.id; t.updatedAt=nowIso(); ls.set('fi_tools', tools); log('emprestimo_criado',{tool:t.code, para:session.user.email, dueAt}); renderLoans(); renderTools(); triggerWebhook('loan_created', { tool: pick(t,['id','code','name']), user: pick(session.user,['id','name','email']), dueAt, reminderHours:48 }); }
+    function doReturn(tool){ const tools=DB.tools(); const t=tools.find(x=>x.id===tool.id); const loans=DB.loans(); const l=loans.find(x=>x.toolId===t.id && x.returnedAt==null); if(!l) return alert('Empréstimo não encontrado.'); l.returnedAt=nowIso(); ls.set('fi_loans', loans); t.status='available'; t.holder=null; t.updatedAt=nowIso(); ls.set('fi_tools', tools); log('emprestimo_devolvido',{tool:t.code}); renderLoans(); renderTools(); triggerWebhook('loan_returned', { loanId:l.id, tool: pick(t,['id','code','name']), user: pick(session.user,['id','name','email']) }); }
+    function renderLoans(){ const loans=DB.loans().filter(l=>!l.returnedAt); const box=$('#loansList'); box.innerHTML=''; if(!loans.length){ box.innerHTML='<div class="list-group-item">Sem empréstimos ativos.</div>'; return; } loans.forEach(l=>{ const overdue=new Date(l.dueAt) < new Date(); const isMine = session.user && session.user.id === l.userId; const item=document.createElement('div'); item.className='list-group-item'; item.innerHTML = `<div class="d-flex justify-content-between align-items-center"><div><div class="fw-semibold">${l.toolName} <span class="text-muted small">(${l.toolCode})</span></div><div class="small text-muted">Para: <strong>${l.userName}</strong> ${isMine?'<span class="badge bg-warning text-dark ms-2">Você</span>':''} <div class="small text-muted">&lt;${l.userEmail}&gt;</div></div></div><div class="text-end"><div class="badge ${overdue?'bg-danger':'bg-secondary'}">${overdue?'Atrasado':'Até'} ${fmt(l.dueAt)}</div></div></div>`; box.appendChild(item); }); }
+    setInterval(()=>{ renderLoans(); }, 60*1000);
+
+    // Log
+    function renderLog(){ const logs=DB.logs(); const box=$('#logList'); box.innerHTML=''; logs.forEach(x=>{ const item=document.createElement('div'); item.className='list-group-item'; item.innerHTML=`<div class=\"d-flex justify-content-between\"><div><b>${x.event}</b> — ${JSON.stringify(x.data)}</div><div class=\"text-muted\">${fmt(x.ts)}</div></div>`; box.appendChild(item); }); }
+
+    // Global Scanner (tab)
+    let html5QrcodeScanner=null;
+    function startScanner(){ const el=$('#reader'); if(!el) return; stopScanner(); try{ html5QrcodeScanner=new Html5Qrcode('reader'); Html5Qrcode.getCameras().then(cams=>{ html5QrcodeScanner.start({ facingMode:'environment' }, { fps:10, qrbox:250 }, onScanSuccess, (err)=>{}); }).catch(()=>{ html5QrcodeScanner.start({ facingMode:'environment' }, { fps:10, qrbox:250 }, onScanSuccess, (err)=>{}); }); }catch(e){ console.warn('Scanner error', e); } }
+    function stopScanner(){ if(html5QrcodeScanner){ html5QrcodeScanner.stop().catch(()=>{}); html5QrcodeScanner.clear().catch(()=>{}); html5QrcodeScanner=null; } }
+    function onScanSuccess(decodedText){
+      $('#scanResult').textContent=decodedText;
+      const toolModal=document.getElementById('modalTool');
+      const isOpen=toolModal.classList.contains('show');
+      if(isOpen){ $('#toolCode').value=decodedText; return; }
+      const tools=DB.tools();
+      const t=tools.find(x=>x.code===decodedText);
+      if(!t){ $('#scanResult').innerHTML=`Código <b>${decodedText}</b> não cadastrado.`; return; }
+      // Se disponível, pedir confirmação antes do empréstimo
+      if(t.status==='available'){
+        if(!session.user) return alert('Faça login.');
+        showConfirmLoan(t, ()=>{
+          doLoan(t);
+          $('#scanResult').innerHTML = `Emprestado: <b>${t.name}</b> (${t.code}) para ${session.user?.name||'?'}.`;
+        });
+      } else {
+        if(!session.user || t.holder !== session.user.id){ $('#scanResult').innerHTML = `Ferramenta emprestada para <b>${DB.users().find(u=>u.id===t.holder)?.name||'outro usuário'}</b>. Apenas ele pode devolver.`; return; }
+        showReturnModal(t, ({condition,note}={})=>{ doReturn(t); });
+        $('#scanResult').innerHTML = `Devolvido: <b>${t.name}</b> (${t.code}).`;
+      }
+    }
+
+    // Per-tool scanner (modal)
+    let toolScanner=null, toolScanningId=null;
+    async function openScanToolModal(tool){
+  // Garante que nenhum scanner anterior esteja rodando (evita erro de câmera em tablets)
+  if (window.stopScanner) await window.stopScanner();
+  if (window.stopToolScanner) await window.stopToolScanner();
+
+  toolScanningId = tool.id;
+  $('#scanToolName').textContent = tool.name;
+  $('#scanToolCode').textContent = tool.code;
+  $('#toolScanMsg').textContent = '';
+
+  const modal = bootstrap.Modal.getOrCreateInstance('#modalScanTool');
+  modal.show();
+
+  // Pequeno delay antes de iniciar a câmera (necessário em alguns tablets)
+  setTimeout(() => {
+    if (window.startToolScanner) window.startToolScanner();
+    else startToolScanner();
+  }, 400);
+}
+    function stopToolScanner(){ if(toolScanner){ toolScanner.stop().catch(()=>{}); toolScanner.clear().catch(()=>{}); toolScanner=null; } }
+    function onToolScanSuccess(decodedText){ const tools=DB.tools(); const t=tools.find(x=>x.id===toolScanningId); if(!t) return; if(decodedText===t.code){ $('#toolScanMsg').innerHTML = '<span class=\"text-success\">QR correspondente! Processando…</span>'; if(t.status==='available'){ if(!session.user){ $('#toolScanMsg').innerHTML = '<span class=\"text-danger\">Faça login para emprestar.</span>'; return; } showConfirmLoan(t, ()=>{ doLoan(t); setTimeout(()=>{ bootstrap.Modal.getOrCreateInstance('#modalScanTool').hide(); }, 600); }); } else { showReturnModal(t, ({condition,note}={})=>{ doReturn(t); }); setTimeout(()=>{ bootstrap.Modal.getOrCreateInstance('#modalScanTool').hide(); }, 600); } } else { $('#toolScanMsg').innerHTML = `<span class="text-danger">QR lido não corresponde. Esperado <code>${t.code}</code>, lido <code>${decodedText}</code>.</span>`; } }
+    document.getElementById('modalScanTool').addEventListener('hidden.bs.modal', stopToolScanner);
+
+    // Export/Import, QR print, Settings
+    function pick(obj, keys){ const o={}; keys.forEach(k=>o[k]=obj[k]); return o; }
+    function triggerWebhook(event, payload){ const url=DB.settings().webhook; if(!url) return; fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ event, at: nowIso(), ...payload }) }) .then(()=>log('webhook_ok',{event})).catch(()=>log('webhook_erro',{event})); }
+    $('#btnExport').addEventListener('click', ()=>{ const data={ users:DB.users(), tools:DB.tools(), loans:DB.loans(), logs:DB.logs(), settings:DB.settings(), brand:DB.brand() }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`ferramentaria_vale_full_${new Date().toISOString().slice(0,19)}.json`; a.click(); URL.revokeObjectURL(url); });
+    $('#importJson').addEventListener('change', (e)=>{ const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); if(obj.users){ const keepAdmin = DB.users().find(u=>u.email && u.email.toLowerCase()===ADMIN_EMAIL.toLowerCase()); let importedUsers = obj.users; if(!importedUsers.find(u=>u.email && u.email.toLowerCase()===ADMIN_EMAIL.toLowerCase())){ importedUsers.push(keepAdmin || { id:uid(), name:'Administrador', email:ADMIN_EMAIL, password:'Vale@2025', role:'admin', createdAt:nowIso() }); } ls.set('fi_users', importedUsers); } if(obj.tools) ls.set('fi_tools', obj.tools); if(obj.loans) ls.set('fi_loans', obj.loans); if(obj.logs)  ls.set('fi_logs',  obj.logs); if(obj.settings) ls.set('fi_settings', obj.settings); if(obj.brand) ls.set('fi_brand', obj.brand); alert('Importado com sucesso'); applyBrand(); renderAll(); }catch(err){ alert('JSON inválido'); } }; r.readAsText(file); });
+    function renderQR(){ const box=$('#qrArea'); if(!box) return; box.innerHTML=''; DB.tools().forEach(t=>{ const wrap=document.createElement('div'); wrap.className='qr-print'; wrap.innerHTML = `<div id="qr_${t.id}"></div><small>${t.name}</small><small>${t.code}</small>`; box.appendChild(wrap); const qrel=document.getElementById(`qr_${t.id}`); new QRCode(qrel,{ text:t.code, width:96, height:96 }); }); }
+    $('#btnRenderQRCodes')?.addEventListener('click', renderQR);
+    $('#btnSaveSettings').addEventListener('click', ()=>{ const s=DB.settings(); s.webhook=$('#cfgWebhook').value.trim(); ls.set('fi_settings', s); const b=DB.brand(); b.logo=$('#cfgLogo').value.trim(); b.title=$('#cfgBrandTitle').value.trim()||'Vale'; b.tag=$('#cfgTag').value.trim()||'Segurança e produtividade em primeiro lugar'; b.colors.primary=$('#cfgPrimary').value; b.colors.secondary=$('#cfgSecondary').value; b.colors.bg=$('#cfgBg').value; ls.set('fi_brand', b); applyBrand(); alert('Configurações salvas'); });
+    $('#btnResetBrand').addEventListener('click', ()=>{ ls.set('fi_brand', { logo:'', title:'Vale', tag:'Segurança e produtividade em primeiro lugar', links:{ politicas:'#', ajuda:'#' }, colors:{ primary:'#1E6E43', secondary:'#3BA99C', bg:'#F4F6F6' } }); applyBrand(); });
+    function applyBrand(){ const b=DB.brand(); document.documentElement.style.setProperty('--vale-green', b.colors.primary); document.documentElement.style.setProperty('--vale-teal', b.colors.secondary); document.documentElement.style.setProperty('--vale-bg', b.colors.bg); $('#valeLogo').src = b.logo || 'data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 28\"><rect width=\"120\" height=\"28\" fill=\"white\"/><text x=\"8\" y=\"19\" font-family=\"Segoe UI, Arial\" font-size=\"14\" fill=\"#1E6E43\">Vale</text></svg>`); $('#brandTitle').textContent = b.title||'Vale'; $('#siteTag').textContent = b.tag||''; const links=b.links||{ politicas:'#', ajuda:'#' }; $('#linkPoliticas').href = links.politicas||'#'; $('#linkAjuda').href = links.ajuda||'#'; }
+
+    function renderAll(){ renderTools(); renderLoans(); renderLog(); renderUsers(); $('#cfgWebhook').value = DB.settings().webhook || ''; preloadBrandToForm(); applyAdminGuards(); }
+    function preloadBrandToForm(){ const b=DB.brand(); $('#cfgLogo').value=b.logo||''; $('#cfgBrandTitle').value=b.title||'Vale'; $('#cfgTag').value=b.tag||''; $('#cfgPrimary').value=b.colors?.primary||'#1E6E43'; $('#cfgSecondary').value=b.colors?.secondary||'#3BA99C'; $('#cfgBg').value=b.colors?.bg||'#F4F6F6'; }
+
+    // Função utilitária para exibir modal de confirmação de empréstimo
+    function showConfirmLoan(tool, onConfirm){
+      const modalEl = document.getElementById('confirmLoanModal');
+      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      const text = document.getElementById('confirmLoanText');
+      text.innerHTML = `Deseja emprestar <strong>${tool.name}</strong> (<code>${tool.code}</code>)?`;
+      const confirmBtn = document.getElementById('confirmLoanBtn');
+      // remover handlers anteriores
+      confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+      const newBtn = document.getElementById('confirmLoanBtn');
+      newBtn.addEventListener('click', ()=>{
+        try{ onConfirm(); }catch(e){ console.error(e); }
+        modal.hide();
+      }, { once:true });
+      modal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', ()=>{ applyBrand(); renderAll(); document.getElementById('year').textContent = new Date().getFullYear(); });
+    document.getElementById('modalTool').addEventListener('hidden.bs.modal', ()=>{ if(fillCodeScanner){ fillCodeScanner.stop().catch(()=>{}); fillCodeScanner.clear().catch(()=>{}); fillCodeScanner=null; } });
+  </script>
+
+<!-- Idle grace modal with progress bar (injected) -->
+<div class="modal fade" id="idleGraceModal" tabindex="-1">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sessão quase expirada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Ficou inativo. A sessão será encerrada em <strong id="idleGraceRemaining">15s</strong>.</p>
+        <div class="progress" style="height:10px; border-radius:8px; overflow:hidden;">
+          <div id="idleGraceProgress" class="progress-bar" role="progressbar" style="width:100%" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="small text-muted mt-2">Clique em "Continuar sessão" para permanecer logado.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="idleGraceLogout">Encerrar agora</button>
+        <button type="button" class="btn btn-success" id="idleGraceKeep">Continuar sessão</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const IDLE_MS = 60 * 1000; // 60s
+  const GRACE_MS = 15 * 1000; // 15s
+  let idleTimer = null, graceTimer = null, progressInterval = null;
+
+  function clearTimers(){
+    if(idleTimer){ clearTimeout(idleTimer); idleTimer = null; }
+    if(graceTimer){ clearTimeout(graceTimer); graceTimer = null; }
+    if(progressInterval){ clearInterval(progressInterval); progressInterval = null; }
+  }
+
+  function doLogout(){
+    clearTimers();
+    try{
+      if(typeof setSessionUser === 'function'){
+        setSessionUser(null);
+      } else {
+        // fallback
+        location.reload();
+      }
+    }catch(e){
+      console.warn('logout fallback', e);
+      location.reload();
+    }
+  }
+
+  function showGraceModal(){
+    clearTimers();
+    const modalEl = document.getElementById('idleGraceModal');
+    if(!modalEl) return doLogout();
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    const bar = document.getElementById('idleGraceProgress');
+    const remainingEl = document.getElementById('idleGraceRemaining');
+    const keepBtn = document.getElementById('idleGraceKeep');
+    const logoutBtn = document.getElementById('idleGraceLogout');
+    let end = Date.now() + GRACE_MS;
+    bar.style.width = '100%';
+    remainingEl.textContent = Math.ceil(GRACE_MS/1000) + 's';
+
+    // wire buttons
+    keepBtn.onclick = function(){ modal.hide(); resetIdle(); };
+    logoutBtn.onclick = function(){ modal.hide(); doLogout(); };
+
+    modal.show();
+
+    progressInterval = setInterval(()=>{
+      const remaining = Math.max(0, end - Date.now());
+      const pct = (remaining / GRACE_MS) * 100;
+      bar.style.width = pct + '%';
+      remainingEl.textContent = Math.ceil(remaining/1000) + 's';
+      if(remaining <= 0){
+        clearInterval(progressInterval);
+        progressInterval = null;
+        modal.hide();
+        doLogout();
+      }
+    }, 100);
+
+    // hard fail-safe
+    graceTimer = setTimeout(()=>{ try{ modal.hide(); }catch(e){} doLogout(); }, GRACE_MS + 200);
+  }
+
+  function resetIdle(){
+    clearTimers();
+    idleTimer = setTimeout(()=>{ showGraceModal(); }, IDLE_MS);
+  }
+
+  ['click','mousemove','keydown','scroll','touchstart'].forEach(evt=>{
+    window.addEventListener(evt, ()=>{ resetIdle(); }, {passive:true});
+  });
+
+  // start
+  document.addEventListener('DOMContentLoaded', ()=>{ resetIdle(); });
+})();
+</script>
+
+
+<!-- RETURN CONDITION MODAL - ADDED BY CHATGPT -->
+<!-- Modal: returnConditionModal -->
+<div class="modal fade" id="returnConditionModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Devolução - Condição da ferramenta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="returnToolInfo" class="mb-2 small text-muted"></div>
+
+        <div class="mb-3">
+          <label class="form-label">Selecione a condição</label>
+          <select id="returnConditionSelect" class="form-select">
+            <option value="clean">Boas condições / Limpa</option>
+            <option value="dirty">Suja</option>
+            <option value="damaged">Danificada</option>
+          </select>
+        </div>
+
+        <div id="returnDescWrapper" class="mb-3" style="display:none;">
+          <label class="form-label">Descrição (obrigatória)</label>
+          <textarea id="returnDescription" class="form-control" rows="3" placeholder="Descreva o que aconteceu..."></textarea>
+          <div class="form-text small text-muted">Campo obrigatório para aceitar devolução quando a ferramenta estiver suja ou danificada.</div>
+        </div>
+
+        <div id="returnPreviewNote" class="small text-muted"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="confirmReturnBtn">Aceitar devolução</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END RETURN CONDITION MODAL -->
+
+
+
+<!-- RETURN CONDITION SCRIPT - ADDED BY CHATGPT -->
+<script>
+function showReturnModal(tool, onConfirm){
+  const modalEl = document.getElementById('returnConditionModal');
+  if(!modalEl){
+    console.error('Modal de devolução não encontrado.');
+    if(typeof onConfirm === 'function') onConfirm({condition:'clean', note:''});
+    return;
+  }
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+  // query elements scoped to the modal element to avoid clashes
+  const info = modalEl.querySelector('#returnToolInfo');
+  const select = modalEl.querySelector('#returnConditionSelect');
+  const descWrap = modalEl.querySelector('#returnDescWrapper');
+  const desc = modalEl.querySelector('#returnDescription');
+  const confirmBtn = modalEl.querySelector('#confirmReturnBtn');
+
+  if(!info || !select || !descWrap || !desc || !confirmBtn){
+    console.error('Algum elemento do modal de devolução está faltando.', {info, select, descWrap, desc, confirmBtn});
+    if(typeof onConfirm === 'function') onConfirm({condition:'clean', note:''});
+    return;
+  }
+
+  // initialize fields
+  info.innerHTML = `<strong>${(tool && (tool.name || tool.title)) || 'Ferramenta'}</strong> <small class="text-muted">(${tool && tool.code || ''})</small>`;
+  select.value = 'clean';
+  desc.value = '';
+  desc.setAttribute('maxlength','300');
+  descWrap.style.display = 'none';
+
+  // remove previously attached listeners safely using stored refs
+  if(confirmBtn._listener) {
+    confirmBtn.removeEventListener('click', confirmBtn._listener);
+    delete confirmBtn._listener;
+  }
+  if(select._listener) {
+    select.removeEventListener('change', select._listener);
+    delete select._listener;
+  }
+
+  // handler for select change
+  const selectListener = function(){
+    const v = select.value;
+    if(v === 'clean'){
+      descWrap.style.display = 'none';
+    } else {
+      descWrap.style.display = 'block';
+      setTimeout(()=> desc.focus(), 200);
+    }
+  };
+
+  select.addEventListener('change', selectListener);
+  select._listener = selectListener;
+
+  // handler for confirm button
+  const confirmListener = function(e){
+    e.preventDefault();
+    const cond = select.value;
+    const text = desc.value.trim();
+    if((cond === 'dirty' || cond === 'damaged') && !text){
+      alert('Por favor, descreva o problema para aceitar a devolução.');
+      desc.focus();
+      return;
+    }
+
+    // try to attach note to loan record if DB.loans exists
+    try{
+      if(window.DB && typeof DB.loans === 'function'){
+        const loans = DB.loans();
+        const loan = loans && loans.find(l => l.toolId === tool.id && !l.returnedAt);
+        if(loan){
+          loan.returnCondition = cond;
+          loan.returnNote = text || '';
+          loan._pendingReturn = true;
+          if(window.ls && typeof ls.set === 'function') ls.set('fi_loans', loans);
+        }
+      }
+    }catch(err){
+      console.warn('Erro ao anexar condição ao empréstimo', err);
+    }
+
+    modal.hide();
+    try{ if(typeof onConfirm === 'function') onConfirm({ condition: cond, note: text }); }catch(err){ console.error(err); }
+  };
+
+  confirmBtn.addEventListener('click', confirmListener);
+  confirmBtn._listener = confirmListener;
+
+  // show modal
+  modal.show();
+}
+</script>
+<!-- END RETURN CONDITION SCRIPT -->
+
+
+
+
+<!-- ADMIN RETURN ISSUES MODAL - ADDED BY CHATGPT -->
+<div class="modal fade" id="adminReturnIssuesModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Devoluções - Sujas / Danificadas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <div id="adminReturnIssuesContent">
+          <p class="small text-muted" id="adminReturnIssuesCount">Carregando...</p>
+          <div class="table-responsive">
+            <table class="table table-sm" id="adminReturnIssuesTable">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nome</th>
+                  <th>Usuário</th>
+                  <th>Condição</th>
+                  <th>Descrição</th>
+                  <th>Data Devolução</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="adminReturnIssuesRefresh" type="button" class="btn btn-outline-secondary">Atualizar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN BUTTON (hidden by default, shown to admins via JS) -->
+<style>
+#btnReturnIssues {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1055;
+  display: none;
+}
+</style>
+<button id="btnReturnIssues" class="btn btn-warning btn-sm">Devoluções com problema</button>
+<!-- END ADMIN RETURN ISSUES MODAL -->
+
+<!-- ADMIN RETURN ISSUES SCRIPT - ADDED BY CHATGPT -->
+<script>
+function getReturnIssueLoans(){
+  try{
+    if(window.DB && typeof DB.loans === 'function'){
+      const loans = DB.loans() || [];
+      return loans.filter(l => l.returnCondition && (l.returnCondition === 'dirty' || l.returnCondition === 'damaged'));
+    }
+    return [];
+  }catch(e){
+    console.error('Erro ao obter loans para summary', e);
+    return [];
+  }
+}
+
+function renderAdminReturnIssues(){
+  const rows = getReturnIssueLoans();
+  const tableBody = document.querySelector('#adminReturnIssuesTable tbody');
+  const countEl = document.getElementById('adminReturnIssuesCount');
+  tableBody.innerHTML = '';
+  if(!rows.length){
+    countEl.textContent = 'Nenhuma devolução com problema encontrada.';
+  } else {
+    countEl.textContent = rows.length + ' devolução(ões) com problema encontrada(s).';
+    rows.forEach(r => {
+      const tr = document.createElement('tr');
+      const userName = (window.DB && typeof DB.users === 'function' && DB.users().find(u=>u.id===r.userId)?.name) || (r.holderName || r.holder || '—');
+      const returnedAt = r.returnedAt ? new Date(r.returnedAt).toLocaleString() : (r._pendingReturn ? 'Pendente' : '—');
+      tr.innerHTML = `
+        <td>${r.toolCode || (r.tool && r.tool.code) || '—'}</td>
+        <td>${r.toolName || (r.tool && r.tool.name) || r.toolId || '—'}</td>
+        <td>${userName}</td>
+        <td>${r.returnCondition}</td>
+        <td>${(r.returnNote||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</td>
+        <td>${returnedAt}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  }
+}
+
+// open modal (and refresh)
+function showAdminReturnIssuesModal(){
+  renderAdminReturnIssues();
+  const modalEl = document.getElementById('adminReturnIssuesModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modal.show();
+}
+
+// Wire button and refresh
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('btnReturnIssues');
+  if(btn){
+    btn.addEventListener('click', showAdminReturnIssuesModal);
+  }
+  const refreshBtn = document.getElementById('adminReturnIssuesRefresh');
+  if(refreshBtn){
+    refreshBtn.addEventListener('click', renderAdminReturnIssues);
+  }
+
+  // Show admin button if session.user is admin (common pattern in your app)
+  try{
+    if(window.session && session.user && (session.user.isAdmin || session.user.role === 'admin' || session.user.type === 'admin')){
+      const b = document.getElementById('btnReturnIssues');
+      if(b) b.style.display = 'block';
+    }
+  }catch(e){}
+});
+</script>
+<!-- END ADMIN RETURN ISSUES SCRIPT -->
+
+
+<!-- Robust scanner management injected by assistant -->
+<script>
+// Robust scanner management (overrides previous implementations if any)
+(async function(){
+  // hold instances
+  window._robustScanners = window._robustScanners || {};
+  const S = window._robustScanners;
+
+  S.html5QrcodeScanner = null;
+  S.toolScanner = null;
+  S.fillCodeScanner = null;
+
+  async function safeStop(instance){
+    try{
+      if(!instance) return;
+      if(typeof instance.stop === 'function'){
+        await instance.stop().catch(()=>{});
+      }
+      if(typeof instance.clear === 'function'){
+        try{ instance.clear(); }catch(e){}
+      }
+    }catch(e){
+      console.warn('safeStop error', e);
+    }
+  }
+
+  async function stopGlobalScanner(){
+    try{
+      await safeStop(S.html5QrcodeScanner);
+    }catch(e){ console.warn(e); }
+    S.html5QrcodeScanner = null;
+    const reader = document.getElementById('reader');
+    if(reader) reader.innerHTML = '';
+  }
+
+  
+async function startGlobalScanner(){
+  const el = document.getElementById('reader');
+  if(!el) return;
+  await stopGlobalScanner();
+  try{
+    S.html5QrcodeScanner = new Html5Qrcode('reader');
+
+    // tenta listar câmeras
+    let chosen = null;
+    try{
+      const cams = await Html5Qrcode.getCameras();
+      if(cams && cams.length){
+        // Prefer camera cujo label sugira "traseira"
+        const prefer = cams.find(c => /back|rear|traseira|environment/i.test(c.label || ''));
+        // se não encontrou, tenta heurística: escolher a última (muitos dispositivos colocam traseira por último)
+        const fallback = cams[cams.length-1];
+        chosen = prefer || fallback || cams[0];
+        console.log('Available cameras (global):', cams, 'chosen:', chosen);
+      }
+    }catch(e){
+      console.warn('getCameras failed (global)', e);
+    }
+
+    // Se temos um deviceId use-o, senão tente facingMode exact, senão fallback
+    let cameraConfig = null;
+    if(chosen && chosen.id) cameraConfig = chosen.id;
+    else cameraConfig = { facingMode: { exact: 'environment' } };
+
+    // Tenta iniciar. Se falhar com facingMode exact, tenta sem exact (compatibilidade)
+    try{
+      await S.html5QrcodeScanner.start(cameraConfig, { fps: 10, qrbox: 250 },
+        (decoded) => { try{ if(typeof onScanSuccess === 'function') onScanSuccess(decoded); }catch(e){ console.error(e); } },
+        (err) => {}
+      );
+    }catch(startErr){
+      console.warn('start with chosen camera failed, trying fallback...', startErr);
+      // último recurso: tentar sem constraints (deixa o browser escolher)
+      try{
+        await S.html5QrcodeScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 250 }, onScanSuccess, (err)=>{});
+      }catch(finalErr){
+        console.error('failed to start scanner (global)', finalErr);
+        const res = document.getElementById('scanResult');
+        if(res) res.textContent = 'Não foi possível iniciar a câmera: ' + (finalErr && finalErr.message ? finalErr.message : finalErr);
+      }
+    }
+  }catch(e){
+    console.warn('startGlobalScanner error', e);
+    const res = document.getElementById('scanResult');
+    if(res) res.textContent = 'Não foi possível iniciar a câmera: ' + (e && e.message ? e.message : '');
+  }
+}
+
+
+  async function stopToolScanner(){
+    try{ await safeStop(S.toolScanner); }catch(e){ console.warn(e); }
+    S.toolScanner = null;
+    const el = document.getElementById('toolScanReader');
+    if(el) el.innerHTML = '';
+  }
+
+  
+async function startToolScanner(){
+  const el = document.getElementById('toolScanReader');
+  if(!el) return;
+  await stopToolScanner();
+  try{
+    S.toolScanner = new Html5Qrcode('toolScanReader');
+
+    let chosen = null;
+    try{
+      const cams = await Html5Qrcode.getCameras();
+      if(cams && cams.length){
+        const prefer = cams.find(c => /back|rear|traseira|environment/i.test(c.label || ''));
+        const fallback = cams[cams.length-1];
+        chosen = prefer || fallback || cams[0];
+        console.log('Available cameras (tool):', cams, 'chosen:', chosen);
+      }
+    }catch(e){
+      console.warn('getCameras failed (tool)', e);
+    }
+
+    let cameraConfig = null;
+    if(chosen && chosen.id) cameraConfig = chosen.id;
+    else cameraConfig = { facingMode: { exact: 'environment' } };
+
+    try{
+      await S.toolScanner.start(cameraConfig, { fps:10, qrbox:220 }, onToolScanSuccess, (err)=>{});
+    }catch(startErr){
+      console.warn('startToolScanner try fallback', startErr);
+      try{
+        await S.toolScanner.start({ facingMode: 'environment' }, { fps:10, qrbox:220 }, onToolScanSuccess, (err)=>{});
+      }catch(finalErr){
+        const msg = document.getElementById('toolScanMsg');
+        if(msg) msg.innerHTML = '<span class="text-danger">Não foi possível iniciar a câmera. ' + (finalErr && finalErr.message ? finalErr.message : finalErr) + '</span>';
+        console.warn('startToolScanner error', finalErr);
+      }
+    }
+  }catch(e){
+    const msg = document.getElementById('toolScanMsg');
+    if(msg) msg.innerHTML = '<span class="text-danger">Não foi possível iniciar a câmera. ' + (e && e.message ? e.message : '') + '</span>';
+    console.warn('startToolScanner error', e);
+  }
+}
+
+
+  async function stopFillScanner(){
+    try{ await safeStop(S.fillCodeScanner); }catch(e){ console.warn(e); }
+    S.fillCodeScanner = null;
+    const temp = document.getElementById('toolScanTemp');
+    if(temp) temp.innerHTML = '';
+  }
+
+  // Expose functions (override existing names)
+  window.startScanner = startGlobalScanner;
+  window.stopScanner = stopGlobalScanner;
+  window.startToolScanner = startToolScanner;
+  window.stopToolScanner = stopToolScanner;
+  window.stopFillCodeScanner = stopFillScanner;
+  window.stopFillScanner = stopFillScanner; // alias
+
+  // ensure cleanup on lifecycle events
+  window.addEventListener('pagehide', async ()=>{ await stopGlobalScanner(); await stopToolScanner(); await stopFillScanner(); });
+  window.addEventListener('beforeunload', async ()=>{ await stopGlobalScanner(); await stopToolScanner(); await stopFillScanner(); });
+  document.addEventListener('visibilitychange', async ()=>{ if(document.visibilityState === 'hidden'){ await stopGlobalScanner(); await stopToolScanner(); } });
+
+  // If scanner container exists and previously an instance was created, ensure it's cleared
+  document.addEventListener('DOMContentLoaded', function(){
+    try{ 
+      if(document.getElementById('reader')) { /* do not auto-start here to respect original logic */ }
+    }catch(e){ console.warn(e); }
+  });
+})();
+</script>
+<!-- End injected script -->
+
+
+<script>
+// Logo file picker: reads selected image as DataURL, updates cfgLogo value and preview, and calls applyBrand()
+(function(){
+  const fileInput = document.getElementById('cfgLogoFile');
+  const urlInput = document.getElementById('cfgLogo');
+  const preview = document.getElementById('cfgLogoPreview');
+  const info = document.getElementById('cfgLogoInfo');
+  if(!fileInput || !urlInput) return;
+  fileInput.addEventListener('change', function(e){
+    const file = fileInput.files && fileInput.files[0];
+    if(!file) return;
+    if(file.size > 2_500_000){ alert('Arquivo muito grande. Selecione uma imagem menor que 2.5MB.'); fileInput.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      const dataUrl = ev.target.result;
+      urlInput.value = dataUrl;
+      preview.src = dataUrl;
+      preview.style.display = 'inline-block';
+      info.textContent = 'Arquivo selecionado (salve as configurações para manter).';
+      try{ if(typeof applyBrand === 'function') applyBrand(); }catch(e){ console.warn(e); }
+    };
+    reader.readAsDataURL(file);
+  });
+  urlInput.addEventListener('change', function(){
+    const v = urlInput.value.trim();
+    if(!v){ preview.style.display='none'; info.textContent = 'Cole uma URL ou selecione um arquivo (max ~2MB).'; return; }
+    if(v.startsWith('data:')){ preview.src = v; preview.style.display='inline-block'; info.textContent = 'Imagem embutida pronta.'; try{ if(typeof applyBrand === 'function') applyBrand(); }catch(e){}; return; }
+    preview.style.display='none'; info.textContent = 'Carregando preview...'; const img = new Image();
+    img.onload = function(){ preview.src = v; preview.style.display='inline-block'; info.textContent = 'Imagem externa carregada.'; try{ if(typeof applyBrand === 'function') applyBrand(); }catch(e){}; };
+    img.onerror = function(){ preview.style.display='none'; info.textContent = 'Não foi possível carregar a imagem. Verifique a URL ou selecione um arquivo.'; };
+    img.src = v;
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    const v = urlInput.value && urlInput.value.trim();
+    if(v){
+      if(v.startsWith('data:')){ preview.src = v; preview.style.display='inline-block'; info.textContent = 'Preview de imagem embutida.'; }
+      else {
+        const img = new Image();
+        img.onload = function(){ preview.src = v; preview.style.display='inline-block'; info.textContent = 'Preview de imagem externa.'; };
+        img.onerror = function(){ preview.style.display='none'; info.textContent = 'URL do logo inválida.'; };
+        img.src = v;
+      }
+    }
+  });
+})();
+</script>
+
+
+<script>
+function handleCameraError(err) {
+  console.warn('camera error', err);
+  const out = document.getElementById('scanResult') || document.body;
+
+  if (err && err.name === 'NotAllowedError') {
+    out.innerHTML = `
+      <strong>Permissão negada</strong><br>
+      O navegador não permitiu acesso à câmera.<br>
+      1) Verifique as permissões do navegador (Configurações → Permissões → Câmera).<br>
+      2) Se estiver em um app/webview, confirme que o app repassa permissões à WebView.<br>
+      3) Garanta que você está em <strong>HTTPS</strong> ou em <em>localhost</em>.
+    `;
+  } else if (err && err.name === 'NotFoundError') {
+    out.innerHTML = 'Nenhuma câmera encontrada neste dispositivo.';
+  } else if (err && err.name === 'NotReadableError') {
+    out.innerHTML = 'Câmera ocupada — feche outros apps usando a câmera.';
+  } else {
+    out.innerHTML = 'Não foi possível iniciar a câmera: ' + (err && err.message ? err.message : err);
+  }
+}
+</script>
+
+</body>
+</html>
